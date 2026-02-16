@@ -6,7 +6,7 @@ const app = require("./src/app");
 const mongoose = require('mongoose')
 
 function connectToDb(){
-    mongoose.connect("mongodb+srv://krishnacarpenter222_db_user:zGZf8RHi6JIMDOsV@cluster0.t9yluda.mongodb.net/day6")
+    mongoose.connect(DATABASE_URL)
     .then(()=>{
         console.log("Connected to database")
     })
