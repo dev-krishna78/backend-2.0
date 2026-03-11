@@ -1,5 +1,5 @@
 const followModel = require("../models/follow.model")
-
+const mongoose = require("mongoose");
 const userModel = require("../models/user.model")
 
 
@@ -32,7 +32,6 @@ async function followUserController(req,res){
        const isAlreadyFollowing =  await followModel.findOne({
             follower: followerUsername,
             followee: followeeUsername,
-            status: req.body
         })
 
         if(isAlreadyFollowing){
@@ -41,8 +40,8 @@ async function followUserController(req,res){
                 follow: isAlreadyFollowing
             })
         }
-
-        const followRecord = await followModel.create({
+   
+      const followRecord = await followModel.create({
             follower: followerUsername,
             followee: followeeUsername,
             status: req.body
@@ -53,9 +52,7 @@ async function followUserController(req,res){
             follow: followRecord
            
         })
-         console.log(followStatus)
-         
-    }
+}
 
 
 async function unfollowUserController(req,res){
@@ -83,7 +80,57 @@ async function unfollowUserController(req,res){
     }
 
 
+    async function acceptFollow(req,res){
+   
+        const requestId = req.params.id
+
+
+      if (!mongoose.Types.ObjectId.isValid(requestId)) {
+     return res.status(400).json({ message: "Invalid ID format" });
+       }
+
+
+
+        const accept = await followModel.findByIdAndUpdate(
+            requestId,
+            {status:"accepted"},
+            { returnDocument: 'after' }
+
+        )
+
+         res.json({
+            message:"Request Accepted Succesfully ",
+            accept
+        })
+         
+    }
+
+
+    async function rejectFollow(req,res){
+
+        const requestId = req.params.id
+
+        if (!mongoose.Types.ObjectId.isValid(requestId)) {
+     return res.status(400).json({ message: "Invalid ID format" });
+       }
+
+        const reject = await followModel.findByIdAndUpdate(
+            requestId,
+            {status:"rejected"},
+            { returnDocument: 'after' }
+
+        );
+
+        res.json({
+            message:"Request rejected",
+            reject
+        });
+    }
+
+
     module.exports ={
         followUserController,
-        unfollowUserController
+        unfollowUserController,
+        acceptFollow,
+        rejectFollow
     }

@@ -22,4 +22,12 @@ userRouter.post("/follow/:username", identifyUser,userController.followUserContr
 userRouter.post("/unfollow/:username", identifyUser,userController.unfollowUserController)
 
 
+// accept request
+userRouter.patch("/accept/:id", identifyUser,userController.acceptFollow);
+
+// reject request
+userRouter.patch("/reject/:id",identifyUser, userController.rejectFollow);
+
+
+
 module.exports = userRouter;
