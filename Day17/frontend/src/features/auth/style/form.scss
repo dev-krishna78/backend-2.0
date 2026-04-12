@@ -31,5 +31,8 @@ main{
             color: whitesmoke;
             cursor: pointer;
         }
+        button:active{
+            scale: 0.95;
+        }
       }
 }

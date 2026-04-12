@@ -1,42 +1,56 @@
-import React from 'react'
-import { useState } from 'react'
+import { useState } from "react"
 import "../style/form.scss"
-import { Link } from 'react-router'
-import axios from 'axios'
+import { Link, useNavigate } from 'react-router'
+import {useAuth} from '../hooks/useAuth'
+
 
 const Login = () => {
 
-  const [email, setEmail] = useState("")
+  const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
+
+  const { handleLogin,loading } = useAuth()
+  const navigate = useNavigate()
+  
+
+  if(loading){
+    return (
+      <h1>Loading....</h1>
+    )
+  }
 
   async function handleSubmit(e){
     e.preventDefault()
   
-     axios.post("http://localhost:3000/api/auth/login",{
-         email,
-         password
-    },{
-       withCredentials: true
-    })
+    handleLogin(username,password)
     .then(res=>{
-      console.log(res.data)
+      console.log(res)
+      navigate("/")
     })
 
   }
   return (
     <main>
-      <div className='form-container'>
-        <h1>Login</h1>
-        <form onSubmit={handleSubmit}>
-          <input onInput={(e)=>{setEmail(e.target.value)}}
-          type="text" name="Email" placeholder='Enter email' />
 
-          <input onInput={(e)=>{setPassword(e.target.value)}}
-          type="text" name='Password' placeholder='Enter email' />
+      <div className='form-container'>
+
+        <h1>Login</h1>
+
+        <form onSubmit={handleSubmit}>
+
+          <input
+          onInput={(e)=>{setUsername(e.target.value)}} 
+          type="text" name="Username" placeholder='Enter username' />
+
+          <input 
+          onInput={(e)=>{setPassword(e.target.value)}} 
+          type="text" name='Password' placeholder='Enter password' />
 
           <button>Login</button>
+
           <p>Not having account goes <Link to="/register">Register</Link></p>
         </form>
+
       </div>
     </main>
   )
